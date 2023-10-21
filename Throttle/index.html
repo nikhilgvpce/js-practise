@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <div>
+        <button class="btn">click here</button>
+    </div>
+</body>
+
+<script>
+
+    function handleClick(args) {
+        console.info('calling handleClick with args', args)
+    }
+
+    /**
+     * @param {function} fn
+     * @param {number} delay
+     * this function will call fn only after the delay is ended
+     * */
+
+    function throttle(fn, delay) {
+        let isCalled = false;
+        let context = this;
+        return (args) => {
+            if(isCalled) {
+                console.info('------------------------')
+                console.info('returning as isCalled: true', new Date().toLocaleTimeString())
+                console.info('------------------------')
+                return;
+            };
+            console.info('------------------------')
+            console.info('calling callback function at', new Date().toLocaleTimeString())
+            fn.call(context, args);
+            console.info('------------------------')
+            isCalled = true;
+            setTimeout(() => {
+                console.info('------------------------')
+                console.info('making isCalled false at', new Date().toLocaleTimeString())
+                console.info('------------------------')
+                isCalled = false
+            }, delay)
+        }
+    }
+
+    function throttle2(fn, delay) {
+        let context = this;
+        let timer = null;
+        return (args) => {
+            if(timer) {
+                console.info('------------------------')
+                console.info('returning as timer is not null', new Date().toLocaleTimeString())
+                console.info('------------------------')
+                return;
+            }
+            console.info('------------------------')
+            console.info('calling callback function at', new Date().toLocaleTimeString())
+            fn.call(context, args);
+            timer = setTimeout(() => {
+                console.info('------------------------')
+                console.info('making timer null at', new Date().toLocaleTimeString())
+                console.info('------------------------')
+                timer = null
+            }, delay)
+        }
+    }
+
+
+    const throttledFunction = throttle2(handleClick, 3000)
+
+    const btn = document.querySelector('.btn')
+    btn.addEventListener('click', function(e) {
+        throttledFunction(e)
+    })
+</script>
+</html>
