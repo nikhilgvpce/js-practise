@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <link href="./index.css" type="text/css" rel="stylesheet" /> 
+    <body>
+        <div class="carousel-wrapper">
+
+        </div>
+    </body>
+    <script>
+        const wrapper = document.querySelector('.carousel-wrapper');
+        const body = document.getElementsByTagName('body')[0]
+        let currImageIndex = 0;
+        let prevCurrentImgIndex = null;
+        const imageSrc = 
+        ['https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1200/lsci/db/PICTURES/CMS/369600/369649.jpg', 
+        'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1200/lsci/db/PICTURES/CMS/369600/369640.jpg', 
+        'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960/lsci/db/PICTURES/CMS/361100/361170.jpg', 
+        'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960/lsci/db/PICTURES/CMS/125200/125285.jpg'];
+        window.addEventListener('load', () => {
+            imageSrc.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.classList.add('carousel-image-' + currImageIndex);
+                img.src = src;
+                img.alt = 'cricket-players';
+                img.classList.add(currImageIndex == index ? 'active' : 'inactive');
+                wrapper.appendChild(img);
+            })
+        })
+        wrapper.addEventListener('click', function(){
+            prevCurrentImgIndex = currImageIndex;
+            if(currImageIndex === imageSrc.length - 1) {
+                currImageIndex = 0;
+                prevCurrentImgIndex = null;
+            } else {
+                currImageIndex = currImageIndex + 1;
+            }
+            
+            const imgTags = document.querySelectorAll('img[class^="carousel-image"]');
+            imgTags.forEach((element, index) => {
+                if(index === currImageIndex) {
+                    element.classList.add('active');
+                    element.classList.remove('inactive')
+                    element.classList.remove('floatright')
+
+                } else {
+                    if(index == prevCurrentImgIndex) {
+                        element.classList.add('floatright')
+                    }
+                    element.classList.add('inactive');
+                    element.classList.remove('active')
+                }
+            })
+            
+        })
+    </script>
+</html>
