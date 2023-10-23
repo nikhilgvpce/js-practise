@@ -1,56 +1,64 @@
 <!DOCTYPE html>
 <html>
-    <link href="./index.css" type="text/css" rel="stylesheet" /> 
-    <body>
-        <div class="carousel-wrapper">
+<link href="./index.css" type="text/css" rel="stylesheet" />
 
-        </div>
-    </body>
-    <script>
-        const wrapper = document.querySelector('.carousel-wrapper');
-        const body = document.getElementsByTagName('body')[0]
-        let currImageIndex = 0;
-        let prevCurrentImgIndex = null;
-        const imageSrc = 
-        ['https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1200/lsci/db/PICTURES/CMS/369600/369649.jpg', 
-        'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1200/lsci/db/PICTURES/CMS/369600/369640.jpg', 
-        'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960/lsci/db/PICTURES/CMS/361100/361170.jpg', 
-        'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960/lsci/db/PICTURES/CMS/125200/125285.jpg'];
-        window.addEventListener('load', () => {
-            imageSrc.forEach((src, index) => {
-                const img = document.createElement('img');
-                img.classList.add('carousel-image-' + currImageIndex);
-                img.src = src;
-                img.alt = 'cricket-players';
-                img.classList.add(currImageIndex == index ? 'active' : 'inactive');
-                wrapper.appendChild(img);
-            })
-        })
-        wrapper.addEventListener('click', function(){
-            prevCurrentImgIndex = currImageIndex;
-            if(currImageIndex === imageSrc.length - 1) {
-                currImageIndex = 0;
-                prevCurrentImgIndex = null;
-            } else {
-                currImageIndex = currImageIndex + 1;
-            }
-            
-            const imgTags = document.querySelectorAll('img[class^="carousel-image"]');
-            imgTags.forEach((element, index) => {
-                if(index === currImageIndex) {
-                    element.classList.add('active');
-                    element.classList.remove('inactive')
-                    element.classList.remove('floatright')
+<body>
+    <div class="carousel-wrapper">
+        <div class="previous"></div>
+        <div class="current"></div>
+        <div class="next"></div>
+    </div>
+</body>
+<script>
+    // const wrapper = document.querySelector('.carousel-wrapper');
+    const current = document.getElementsByClassName('current')[0]
+    const previous = document.getElementsByClassName('previous')[0]
+    const next = document.getElementsByClassName('next')[0]
 
-                } else {
-                    if(index == prevCurrentImgIndex) {
-                        element.classList.add('floatright')
-                    }
-                    element.classList.add('inactive');
-                    element.classList.remove('active')
-                }
-            })
-            
+    const body = document.getElementsByTagName('body')[0]
+    let currImageIndex = 0;
+    let previousImageIndex = null;
+    let nextImageIndex = currImageIndex + 1;
+    const imageSrc =
+        ['https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1200/lsci/db/PICTURES/CMS/369600/369649.jpg',
+            'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_1200/lsci/db/PICTURES/CMS/369600/369640.jpg',
+            'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960/lsci/db/PICTURES/CMS/361100/361170.jpg',
+            'https://img1.hscicdn.com/image/upload/f_auto,t_ds_w_960/lsci/db/PICTURES/CMS/125200/125285.jpg'];
+    const imageTags = [];
+    window.addEventListener('load', () => {
+        imageSrc.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.classList.add('carousel-image-' + currImageIndex);
+            img.src = src;
+            img.alt = 'cricket-players';
+            // img.classList.add(currImageIndex == index ? 'active' : 'inactive');
+            imageTags.push(img)
         })
-    </script>
+        current.appendChild(imageTags[0])
+    })
+    current.addEventListener('click', function () {
+        if (currImageIndex === imageSrc.length) {
+            currImageIndex = 0;
+            nextImageIndex = 1;
+            previousImageIndex = imageSrc.length - 1;
+        } else {
+            previousImageIndex = currImageIndex;
+            currImageIndex = nextImageIndex;
+            nextImageIndex = currImageIndex + 1;
+        }
+
+        previous.replaceChildren([])
+        next.replaceChildren([])
+        if (currImageIndex === imageSrc.length - 1) {
+            nextImageIndex = 0;
+        }
+
+        previous.appendChild(imageTags[previousImageIndex])
+        current.replaceChildren([])
+        current.appendChild(imageTags[currImageIndex])
+        next.appendChild(imageTags[nextImageIndex])
+
+    })
+</script>
+
 </html>

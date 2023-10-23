@@ -4,39 +4,31 @@
     align-items: center;
     justify-content: center;
 }
-@keyframes rightanimate {
-    0% {
-        opacity: 1;
-    }
-
-    25% {
-        opacity: 0.6;
-    }
-
-    50% {
-        opacity: 0.3;
-    }
-
-    100% {
-        opacity: 0;
-    }
+.previous, .next {
+    width: 0;
+    height: 0;
 }
 
-img {
+.previous img, .next img {
+    width: 0;
+    height: 0;
+}
+
+.current img {
     max-width: 50vw;
     max-height: 50vh;
 }
 
-
-.active {
-    opacity: 1;;
-    transform: translateX(0rem);
+.floatleft img {
+    animation: floating 0.5s
 }
 
-.inactive {
-    opacity: 0;
-}
+@keyframes floating {
+    0% {
+        transform: translateX(0vw);
+    }
 
-.floatright {
-    animation: rightanimate 0.5s ease-in-out 0.1s;
+    100% {
+        transform: translateX(-10vw);
+    }
 }
