@@ -15,20 +15,24 @@
 }
 
 .current img {
-    max-width: 50vw;
+    max-width: 60vw;
     max-height: 50vh;
 }
 
-.floatleft img {
-    animation: floating 0.5s
+.floatright img {
+    animation: rightFloat 0.8s
 }
 
-@keyframes floating {
+@keyframes rightFloat {
+
     0% {
         transform: translateX(0vw);
     }
 
+
     100% {
-        transform: translateX(-10vw);
+        transform: translateX(100vw);
     }
+
+   
 }
