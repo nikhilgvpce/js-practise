@@ -31,7 +31,6 @@
             img.classList.add('carousel-image-' + currImageIndex);
             img.src = src;
             img.alt = 'cricket-players';
-            // img.classList.add(currImageIndex == index ? 'active' : 'inactive');
             imageTags.push(img)
         })
         current.appendChild(imageTags[0])
@@ -53,11 +52,17 @@
             nextImageIndex = 0;
         }
 
-        previous.appendChild(imageTags[previousImageIndex])
-        current.replaceChildren([])
-        current.appendChild(imageTags[currImageIndex])
-        next.appendChild(imageTags[nextImageIndex])
-
+        current.classList.add('floatright');
+        // using setTimeout to show the animation by
+        // adding above class ( 'floatright')
+        setTimeout(() => {
+            current.classList.remove('floatright')
+            current.replaceChildren([])
+            previous.appendChild(imageTags[previousImageIndex])
+            current.appendChild(imageTags[currImageIndex])
+            next.appendChild(imageTags[nextImageIndex])
+            resolve();
+        }, 500)
     })
 </script>
 
