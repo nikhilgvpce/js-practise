@@ -1,9 +1,0 @@
-Intersection observer is used to check if a particular 
-
-div is displayed or the scroll position ( x, y) has touched the
-
-div we want to show. Using this we can track the user's beahaviour
-
-and capture which div/ item ( in a shopping cart) is user seeing or 
-
-watched most times.
