@@ -1,0 +1,51 @@
+Intersection observer is used to check if a particular 
+
+div is displayed or the scroll position ( x, y) has touched the
+
+div we want to show. Using this we can track the user's beahaviour
+
+and capture which div/ item ( in a shopping cart) is user seeing or 
+
+watched most times.
+
+https://www.youtube.com/watch?v=2IbRtjez6ag
+
+
+const cards = document.queryselector('card')
+
+new IntersectionObserver(callback, options)
+
+callback function takes two args => (entries, observer)
+
+const observer = new IntersectionObserver(callback, options)
+
+const callback = entries => {
+    entries.forEach(entry => {
+        entry.target.classList.toggle('show', entry.isIntersecting)
+        // to stop observing
+        if(entry.isIntersecting) {
+            observer.unobserve(entry.target)
+        }
+    })
+}
+
+const options = {
+    threshold: 0 / 0.25 / 0.50 / 0.75 / 1 ( 0 is the default value of threshold)
+}
+
+
+
+observer.observe(card) prints -- {
+    isIntersecting: true/ false --> if the element 'card' is visible / not
+    intersectionRatio: 0.25/ 0.5/ 0.75/ 1 --> how much of the element is visible
+    target --> when element is being logged ( div.card.show )
+}
+
+// implement infinte scrolling
+
+
+1. create a search input
+2. when user enters something, call an api ( use openapi: https://openlibrary.org/search.json?)
+3. display the results from the above api call
+4. As and when the scroll is at the bottom of the list again call an api
+5. make use of AbortController when something is being input in the search box
