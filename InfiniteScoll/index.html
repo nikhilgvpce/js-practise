@@ -1,0 +1,61 @@
+<html>
+
+<style>
+    .search {
+        margin: 2% 5%;
+    }
+</style>
+
+<body>
+    <input type="text" class="search" />
+    <div class="results-wrapper"></div>
+</body>
+<script>
+    const callAPI = async (value, pageNumber) => {
+        input.value = value;
+        const apicall = await fetch('https://openlibrary.org/search.json?' + new URLSearchParams({
+            q: `${value}`,
+            page: `${pageNumber}`
+        }));
+        const results = await apicall.json()
+        pageNumber = pageNumber + 1;
+        prevData = [...prevData, ...results.docs]
+        const resultsWrapper = document.querySelector('.results-wrapper');
+        if (resultsWrapper) {
+            prevData.forEach((data) => {
+                const div = document.createElement('div');
+                div.innerText = data.title;
+                div.classList.add('data');
+                resultsWrapper.append(div)
+            })
+        }
+        return pageNumber
+    }
+</script>
+
+<script>
+    const input = document.querySelector('.search');
+    let prevData = [];
+    let pageNumber = 1;
+    async function handleOnChange(event) {
+        pageNumber = await callAPI(event.target.value, pageNumber)
+        const observer = new IntersectionObserver(async(entries) => {
+                const entry = entries[0];
+                if (entry.isIntersecting) {
+                    observer.unobserve(entry.target)
+                    pageNumber = await callAPI(input.value, pageNumber);
+                    const newLast = document.querySelector('.data:last-child');
+                    observer.observe(newLast)
+                }
+            }, {
+                threshold: 1
+            })
+            const element = document.querySelector('.data:last-child');
+            observer.observe(element)
+    }
+    if (input) {
+        input.addEventListener('change', handleOnChange);
+    }
+</script>
+
+</html>
