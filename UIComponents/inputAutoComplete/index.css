@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.parent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: scroll;
+}
+
+input {
+    width: 50vw;
+    height: 5vh;
+}
+
+.suggestion {
+    border-bottom: 0.25px solid blueviolet;
+}
+
+.suggestion:hover {
+    background-color: aqua;
+}
+
+.suggestion-box {
+    width: 49vw;
+    border: 0.5px solid black;
+    max-height: 20vh;
+    overflow: scroll;
+    display: none;
+    flex-direction: column;
+}
