@@ -6,31 +6,27 @@ body {
 .parent {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 100vw;
     height: 100vh;
-    overflow: scroll;
 }
 
 input {
     width: 50vw;
     height: 5vh;
-}
-
-.suggestion {
-    border-bottom: 0.25px solid blueviolet;
+    margin-top: 10px;
 }
 
 .suggestion:hover {
+    cursor: pointer;
     background-color: aqua;
 }
 
 .suggestion-box {
     width: 49vw;
     border: 0.5px solid black;
-    max-height: 20vh;
-    overflow: scroll;
     display: none;
+    margin-top: 10px;
+    min-height: 20vh;
+    overflow-y: scroll;
     flex-direction: column;
 }
