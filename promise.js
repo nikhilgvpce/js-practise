@@ -65,3 +65,15 @@ promiseForEach(arr).then((results) => {
 	console.log("res is", results);
 });
 
+
+function task(time) {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			if(time < 3000) {
+				reject("Rejected");
+			} else {
+				resolve(time)
+			}
+		}, time);
+	});
+}
