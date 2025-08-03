@@ -1,7 +1,7 @@
 
 const createAsync = (retries) => {
 	return new Promise((resolve, reject) => {
-		console.log('Promise retries', retries)
+		// console.log('Promise retries', retries)
 		if(retries === 1) {
 			resolve(`resolved`);
 		} else {
@@ -29,7 +29,20 @@ const retry = async(asyncFn, retries = 3, delay = 50, finalError = 'Failed') => 
 	}
 }
 
-console.log(retry(createAsync, 3, 50, 'Failed'));
+
+const retryThen = (asyncFn, retries = 3, delay = 50, finalError = 'Failed') => {
+
+	return asyncFn(retries).then((res) => console.log(res)).catch((err) => {
+		console.log('catched promises', retries)
+		if(retries > 1) {
+			return retryThen(asyncFn, retries - 1, delay, finalError)
+		} else {
+			Promise.reject(err)
+		}
+	})
+}
+
+console.log(retryThen(createAsync, 3, 50, 'Failed'));
 
 
 
