@@ -1,77 +1,27 @@
-function aggregate() {
-	const arr = [1, 2, 3, 4];
-	const sum = arr.reduce((prev, curr) => {
-		return prev + curr;
-	}, 0);
-	console.log(sum);
+const inpArr = [1, 2, 3, 4, 5, 6];
+
+function findSumByReduce(arr) {
+  function callbackFn(previousValue, currentValue) {
+    return previousValue + currentValue;
+  }
+
+  const total = arr.reduce(callbackFn, 0);
+  return total;
 }
 
-aggregate();
+console.log(findSumByReduce(inpArr));
 
-function segregate() {
-	const arr = [1.1, 1.2, 1.3, 2.1, 2.2, 3.1, 3.2, 4.1];
-	const res = arr.reduce((prev, curr) => {
-		const res = Math.floor(curr);
-		if(!prev[res]) {
-			prev[res] = [];
-		}
-		prev[res].push(curr);
-		return prev;
-	}, {})
-	console.log(res);
+const decimalArr = [1.1, 1.2, 1.3, 2.1, 2.2, 3.1, 3.2, 3.3];
+
+function floorArr(arr) {
+  return arr.reduce((previousValue, currentValue) => {
+    const floored = Math.floor(currentValue);
+    if (!previousValue[floored]) {
+      previousValue[floored] = [];
+    }
+    previousValue[floored].push(currentValue);
+    return previousValue;
+  }, {});
 }
 
-segregate();
-
-// execute a function in series
-
-function primarySchool(str) {
-	console.log(str +"'s " + "primary schooling done");
-	return str;
-}
-
-function secondaySchool(str) {
-	console.log(str +"'s " + "seconday schooling done");
-	return str;
-}
-
-function graduation(str) {
-	console.log(str +"'s " + "graduation done");
-}
-
-const arr = [primarySchool, secondaySchool, graduation];
-
-function sequenceOfEducation() {
-	arr.reduce((prev, curr) => {
-		const res = curr(prev);
-		return res;
-	}, "Nikhil");
-
-}
-
-sequenceOfEducation();
-
-// execute promises in sequence
-
-const asyncTask = (timer) => {
-	return new Promise((resolve) => { 
-		return setTimeout(() => {
-			resolve(`task done with timer ${timer}`);
-		}, timer * 1000);
-	});
-}
-
-const tasksArr = [asyncTask(3), asyncTask(1), asyncTask(2), asyncTask(4)];
-
-function runTasksInSeries() {
-	tasksArr.reduce((prev, curr) => {
-		return prev.then(() => {
-			return curr.then((res) => {
-				console.log(res)
-			})
-		});
-	}, Promise.resolve());
-}
-
-runTasksInSeries();
-
+console.log(floorArr(decimalArr));

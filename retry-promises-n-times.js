@@ -30,7 +30,7 @@ const retry = async(asyncFn, retries = 3, delay = 50, finalError = 'Failed') => 
 }
 
 
-const retryThen = (asyncFn, retries = 3, delay = 50, finalError = 'Failed') => {
+const 	 = (asyncFn, retries = 3, delay = 50, finalError = 'Failed') => {
 
 	return asyncFn(retries).then((res) => console.log(res)).catch((err) => {
 		console.log('catched promises', retries)

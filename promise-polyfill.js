@@ -1,119 +1,78 @@
-
-const states = {
-	PENDING: 0,
-	FULFILLED: 1,
-	REJECTED: 2
-}
+const STATES = {
+  PENDING: 0,
+  FULFILLED: 1,
+  REJECTED: 2,
+};
 
 class MyPromise {
+  constructor(callback) {
+    this.value = "";
+    try {
+      callback(this._resolve, this._reject);
+    } catch (err) {
+      this._reject(err);
+    }
+  }
 
-	constructor(callback) {
-		this.state = states.PENDING;
-		this.handlers = [];
-		this.value = undefined;
+  _resolve = (value) => {
+    this._updateHandler(value, STATES.FULFILLED);
+  };
 
-		try {
-			callback(this.resolve, this.reject);
-		} catch (err) {
-			this.reject(err);
-		}
-	}
+  _reject = (error) => {
+    this._updateHandler(error, STATES.REJECTED);
+  };
 
-	resolve = (value) => {
-		this.handleUpdate(states.FULFILLED, value);
-	}
+  _updateHandler = (value, state) => {
+    this.state = state;
+    this.value = value;
+    this._executeHandler();
+  };
 
-	reject = (value) => {
-		this.handleUpdate(states.REJECTED, value);
-	}
+  _executeHandler = () => {
+    if (this.state === STATES.PENDING) return;
+    setTimeout(() => {
+      // this.handlers.
+    }, 0);
+  };
 
-	handleUpdate = (state, value) => {
-		if(state === states.PENDING) return;
+  then = (onSuccess, onReject) => {
+    return new MyPromise((resolve, reject) => {
+      this.addHandler({
+        onSuccess: (value) => {
+          if (!onSuccess) {
+            return resolve(value);
+          }
+          try {
+            return resolve(onSuccess(value));
+          } catch (err) {
+            return reject(err);
+          }
+        },
+        onReject: (err) => {
+          if (!onReject) {
+            return reject(err);
+          }
+          try {
+            return reject(onReject(err));
+          } catch (err) {
+            return reject(err);
+          }
+        },
+      });
+    });
+  };
 
-		this.state = state;
-		this.value = value;
+  catch = (onFailure) => {
+    this.then(null, onFailure);
+  };
 
-		this.exuectuteHandler();
-	}
-
-	exuectuteHandler = () => {
-		if(this.state === states.PENDING) return;
-
-		this.handlers.forEach((handler) => {
-			if(this.state === states.FULFILLED) {
-				handler.promSuccess(this.value);
-			}
-			handler.promFailure(this.value);
-		})
-	}
-
-	addHandler = (handler) => {
-		this.handlers.push(handler);
-		exuectuteHandler();
-	}
-
-	then = (promSuccess, promFailure) => {
-		return new MyPromise((onResolve, onReject) => {
-			this.addHandler({
-				promSuccess: (value) => {
-					if(!promSuccess) return onResolve(value)
-					try {
-						return onResolve(promSuccess(value))
-					} catch(err) {
-						onReject(promFailure(err))
-					}
-				},
-				promFailure: (value) => {
-					if(!promFailure) return onReject(value)
-					try {
-						return onReject(promFailure(value))
-					} catch(err) {
-						onReject(promFailure(err))
-					}
-				}
-			})
-		})
-	}
-
-	catch = (onErr) => {
-		this.then(null, onErr())
-	}
-
-	finally = (callback) => {
-		return new MyPromise((onResolve, onReject) => {
-			let wasResolved;
-			let value;
-
-			this.then((val) => {
-				value = val;
-				wasResolved = true;
-				return callback();
-			}).catch((err) => {
-				value = val;
-				wasResolved = false;
-				return callback();
-			});
-
-			if(wasResolved) {
-				onResolve(value);
-			} else {
-				onReject(value);
-			}
-		})
-	}
-
+  finally = (cb) => {
+    this.then(
+      (value) => MyPromise._resolve(cb()).then(() => value),
+      (err) =>
+        MyPromise._reject(cb()).then(() => {
+          throw err;
+        })
+    );
+  };
 }
-
-
-
-const prom = new MyPromise((resolve) => {
-	setTimeout(() => {
-		resolve("I am resolved")
-	}, 4000);
-})
-
-prom.then((res) => {
-	console.log(res);
-}).finally(() => {
-	console.log("finally executed")
-})
