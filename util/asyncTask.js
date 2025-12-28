@@ -1,5 +1,6 @@
-export const asyncTask = (timer, shouldReject = false) => {
+export const asyncTask = function (timer, shouldReject = false) {
   return new Promise((resolve, reject) => {
+    console.log(" I am executed with timer", timer);
     setTimeout(() => {
       if (shouldReject) {
         reject(`promise rejected with timer ${timer}`);

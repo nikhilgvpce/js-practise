@@ -1,52 +1,53 @@
+const asyncTask = () => {
+  return new Promise((resolve, reject) => {
+    const value = Math.random() * 10;
+    setTimeout(() => {
+      if (value < 9) reject(`rejected with timer', ${value}`);
+      resolve(`resolved with timer ${value}`);
+    }, value * 1000);
+  });
+};
 
-const createAsync = (retries) => {
-	return new Promise((resolve, reject) => {
-		// console.log('Promise retries', retries)
-		if(retries === 1) {
-			resolve(`resolved`);
-		} else {
-			reject(`rejected`);
-		}
-	})
-}
+const wait = (delay) => {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), delay * 1000);
+  });
+};
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const retryFn = (task, retries, delay, finalError = "Failed") => {
+  task()
+    .then((value) => {
+      console.log(value);
+    })
+    .catch((err) => {
+      if (retries > 0) {
+        wait(task).then(() => {
+          console.log(err);
+          console.log("--------retrying----------");
+          console.log("-----remaining retries-----", retries - 1);
+          retryFn(task, retries - 1, delay);
+        });
+      } else {
+        console.log(finalError);
+      }
+    });
+};
 
+// retryFn(asyncTask, 3, 2);
 
+const asyncAwaitRetry = async (task, retries, delay, finalError = "Failed") => {
+  try {
+    await task();
+    return Promise.resolve("resolved asyncTask");
+  } catch (err) {
+    if (retries <= 0) {
+      return Promise.reject(finalError);
+    }
 
-const retry = async(asyncFn, retries = 3, delay = 50, finalError = 'Failed') => {
+    await wait(delay);
 
-	try {
-		const res = await asyncFn(retries);
-		console.log(res)
-	} catch ( err ) {
-		console.log('catch retries', retries)
-		if(retries <= 0) {
-			return Promise.reject(finalError); 
-		}
-		await wait();
-		return retry(asyncFn, retries - 1, delay, finalError)
-	}
-}
+    return asyncAwaitRetry(task, retries - 1, 2);
+  }
+};
 
-
-const 	 = (asyncFn, retries = 3, delay = 50, finalError = 'Failed') => {
-
-	return asyncFn(retries).then((res) => console.log(res)).catch((err) => {
-		console.log('catched promises', retries)
-		if(retries > 1) {
-			return retryThen(asyncFn, retries - 1, delay, finalError)
-		} else {
-			Promise.reject(err)
-		}
-	})
-}
-
-console.log(retryThen(createAsync, 3, 50, 'Failed'));
-
-
-
-
-
-
-
+asyncAwaitRetry(asyncTask, 3, 1).then(console.log).catch(console.log);

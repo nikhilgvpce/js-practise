@@ -1,38 +1,30 @@
-const createAsyncTask = () => {
-	const value = Math.floor(Math.random() * 10);
-	return function(cb) {
-		setTimeout(() => {
-			cb(value);
-		}, value * 1000)
-	}
-}
+export const asyncTask = () => {
+  const value = Math.random() * 10;
+  return function (callback) {
+    setTimeout(() => {
+      console.log("calling callback with value", value);
+      callback(value);
+    }, value * 1000);
+  };
+};
+
+const tasks = [asyncTask(), asyncTask(), asyncTask(), asyncTask(), asyncTask()];
 
 const tasksInParallel = (tasks, cb) => {
-	const results = [];
-	let count = 0;
-	tasks.forEach((task) => {
-		task(value => {
-			count++;
-			results.push(value);
-			console.log('value', value);
-			if(count === tasks.length) {
-				cb(results)
-			}
-		})
-	})
-}
+  const results = [];
+  let tasksCompleted = 0;
+  tasks.forEach((task) => {
+    task((value) => {
+      console.log("pushing with value", value);
+      results.push(value);
+      tasksCompleted++;
+      if (tasksCompleted >= tasks.length) {
+        cb();
+      }
+    });
+  });
+};
 
-
-const arr = [
-	createAsyncTask(),
-	createAsyncTask(),
-	createAsyncTask(),
-	createAsyncTask(),
-	createAsyncTask(),
-	createAsyncTask(),
-	createAsyncTask()
-]
-
-tasksInParallel(arr, (res) => {
-	console.log(res);
-})
+tasksInParallel(tasks, () => {
+  console.log("Hi!, I am callback, now all tasks are executed");
+});
