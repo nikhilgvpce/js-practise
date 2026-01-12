@@ -19,8 +19,8 @@ const tasks = [
 ];
 
 const tasksInSeries = (tasks) => {
-  const cb = (prevProm, currProm) => {
-    console.log({ prevProm }, { currProm });
+  const cb = (prevProm, currProm, index) => {
+    console.log({ prevProm }, { currProm }, { index });
     return prevProm.then(() => {
       return currProm.then((currRes) => {
         console.log(currRes);
@@ -31,7 +31,7 @@ const tasksInSeries = (tasks) => {
   tasks.reduce(cb, Promise.resolve());
 };
 
-// tasksInSeries(tasks);
+tasksInSeries(tasks);
 
 const recurssiveSeriesExecutor = (arr = []) => {
   const prom = arr.shift();
@@ -42,4 +42,4 @@ const recurssiveSeriesExecutor = (arr = []) => {
   });
 };
 
-recurssiveSeriesExecutor(tasks);
+// recurssiveSeriesExecutor(tasks);

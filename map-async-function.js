@@ -1,41 +1,35 @@
-const asyncFunc = (inp, cb) => {
-	setTimeout(() => {
-		inp = inp * 3;
+const asyncCallBackFn = (num, callBack) => {
+  setTimeout(() => {
+    num = num * 2;
+    if (num === 12) {
+      callBack(true);
+    } else {
+      callBack(null, num);
+    }
+  }, 1000);
+};
 
-		if(inp % 2 !== 0) {
-			cb(null, inp)
-		}
+const mapAsycnFn = (array = [], asyncFn) => {
+  const result = [];
+  return new Promise((resolve, reject) => {
+    const innerProm = array.reduce((acc, current) => {
+      return acc.then(() => {
+        return new Promise((innerResolve, reject) => {
+          asyncFn(current, (err, res) => {
+            if (err) {
+              reject(err);
+            } else {
+              result.push(res);
+              innerResolve(result);
+            }
+          });
+        });
+      });
+    }, Promise.resolve());
+    innerProm.then((res) => resolve(res)).catch((err) => reject(err));
+  });
+};
 
-		cb(inp);
-	}, 1500);
-}
-
-const arr = [1, 2, 3, 4, 5];
-
-const executeElementAsync = (element, asyncFunc) => {
-	return new Promise((resolve) => {
-		asyncFunc(element, (result) => {
-			resolve(result);
-		});
-	});
-}
-
-// const mapAsyncFun = (arr, asyncFunc) => {
-// 	return new Promise((resolve, reject) => {
-// 		const finalResult = [];
-// 		const resultProm = arr.map(async(element) =>  await executeElementAsync(element, asyncFunc));
-// 		resultProm.forEach((res) => {
-// 			res.then((data) => {
-// 				finalResult.push(data);
-// 				if(finalResult.length === resultProm.length) {
-// 					resolve(finalResult);
-// 				}
-// 			});
-// 		});
-
-// 	});
-// }
-
-mapAsyncFun(arr, asyncFunc).then((res) => {
-	console.log('result is', res);
-});
+mapAsycnFn([1, 2, 3, 4, 5], asyncCallBackFn)
+  .then(console.log)
+  .catch(console.log);
